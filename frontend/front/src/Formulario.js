@@ -1,4 +1,4 @@
-function Formulario({botao, eventoTeclado, cadastrar, obj, cancelar}){
+function Formulario({botao, eventoTeclado, cadastrar, obj, cancelar, remover}){
     return(
         <form>
             <input type='text' value={obj.nome}  placeholder='Nome'  onChange={eventoTeclado} name="nome"  className='form-control'/>
@@ -12,8 +12,8 @@ function Formulario({botao, eventoTeclado, cadastrar, obj, cancelar}){
 
                 <div>
                     <input type='button' value='Alterar'   className='btn btn-warning'/>
-                    <input type='button' value='Remover'   className='btn btn-danger'/>
-                    <input type='button' onClick={cancelar} value='Cancelar'  className='btn btn-secondary'/>
+                    <input type='button' onClick={remover}  value='remover'   className='btn btn-danger'/>
+                    <input type='button' onClick={cancelar} value='cancelar'  className='btn btn-secondary'/>
                 </div>
             }
             
