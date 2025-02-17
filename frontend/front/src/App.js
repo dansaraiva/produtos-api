@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import './App.css';
 import Formulario from './Formulario';
 import Tabela from './Tabela';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 function App() {
 

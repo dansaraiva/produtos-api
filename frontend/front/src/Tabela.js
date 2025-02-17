@@ -16,7 +16,11 @@ function Tabela({vetor, selecionar}){
                         <td> {indice + 1}</td>
                         <td> {obj.nome}</td>
                         <td> {obj.marca}</td>
-                        <td> <button onClick={() => {selecionar(indice)}} className="btn btn-success">Selecionar</button></td>
+                        <td> 
+                            <button onClick={() => selecionar(indice)} className="btn btn-success">
+                                <i className="fas fa-check" style={{ marginRight: "5px" }}></i> Selecionar
+                            </button>
+                        </td>                    
                     </tr>
                 ))
                }
