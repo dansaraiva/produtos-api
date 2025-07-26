@@ -39,8 +39,8 @@ jobs:
           node-version: 18
       
       # 5. Instala as dependências do frontend
-      - name: Instalar dependências do Frontend com 'npm ci'
-        run: npm ci
+      - name: Instalar dependências do Frontend
+        run: npm install # Usando 'install' em vez de 'ci' como workaround
         working-directory: ./frontend
         
       # 6. Executa os testes do frontend
