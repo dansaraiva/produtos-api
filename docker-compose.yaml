@@ -1,0 +1,51 @@
+# docker-compose.yaml 
+
+services:
+  # Serviço do Banco de Dados (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: produtos-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: produtos_db
+      MYSQL_ROOT_PASSWORD: root_password 
+    ports:
+      # Expõe a porta do MySQL para conectar com um cliente de BD
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  # Serviço do Backend (Java/Spring)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    image: dansaraiva/produtos-api-backend:latest
+    container_name: produtos-api-backend
+    ports:
+      - "8080:8080"
+    environment:
+      # --- Configurações de conexão com o banco de dados MySQL ---
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/produtos_db?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    # Garante que o serviço de banco de dados 'db' inicie ANTES do backend
+    depends_on:
+      - db
+
+  # Serviço do Frontend (React) 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    image: dansaraiva/produtos-api-frontend:latest
+    container_name: produtos-api-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+# Define o volume nomeado que será usado pelo serviço 'db'
+volumes:
+  mysql-data:

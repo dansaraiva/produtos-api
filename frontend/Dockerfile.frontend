@@ -1,0 +1,36 @@
+# frontend/Dockerfile.frontend
+
+# ===== ESTÁGIO 1: Build da Aplicação com Node.js =====
+FROM node:18-alpine AS builder
+
+# Define o diretório de trabalho
+WORKDIR /app
+
+# Copia o package.json e package-lock.json para cache de dependências
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copia o resto do código fonte do frontend
+COPY . .
+
+# Executa o build de produção do React
+RUN npm run build
+
+
+# ===== ESTÁGIO 2: Servidor Web com Nginx =====
+FROM nginx:1.25-alpine
+
+# Expõe a porta 80, que é a porta padrão do Nginx
+EXPOSE 80
+
+# Copia os arquivos estáticos gerados no estágio de build para a pasta padrão do Nginx
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# O Nginx precisa de uma pequena configuração para funcionar com Single Page Applications (como o React)
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx.conf /etc/nginx/conf.d
+
+# Comando padrão do Nginx para iniciar o servidor
+CMD ["nginx", "-g", "daemon off;"]

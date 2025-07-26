@@ -19,13 +19,28 @@ function App() {
   const [produtos, setProdutos] = useState([]);
   const [objProduto, setObjProduto] = useState(produto);
 
-  //UseEffect
-  useEffect(() => {
-    fetch("http://localhost:8080/listar")
-      .then(retorno => retorno.json())
-      .then(retorno_convertido => setProdutos(retorno_convertido));
-  }, []);
-
+useEffect(() => {
+  fetch('/api/listar')
+    .then(retorno => {
+      if (!retorno.ok) {
+        throw new Error(`HTTP error! status: ${retorno.status}`);
+      }
+      return retorno.json();
+    })
+    .then(retorno_convertido => {
+      console.log('API Response:', retorno_convertido); // Debug log
+      if (Array.isArray(retorno_convertido)) {
+        setProdutos(retorno_convertido);
+      } else {
+        console.error('API did not return an array:', retorno_convertido);
+        setProdutos([]); // Set empty array as fallback
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+      setProdutos([]); // Set empty array on error
+    });
+}, []);
   //Obter dados do formulário
   const aoDigitar = (e) => {
     setObjProduto({ ...objProduto, [e.target.name]: e.target.value });
