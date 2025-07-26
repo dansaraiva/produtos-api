@@ -1,0 +1,28 @@
+# Nome do nosso pipeline
+name: CI/CD Pipeline - Build e Push para Docker Hub
+
+# Gatilho (trigger): 
+on:
+  push:
+    branches: [ "main" ]
+
+# Tarefas (jobs) que o pipeline irá executar
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build das imagens Docker
+        run: docker compose build
+
+      - name: Push das imagens para o Docker Hub
+        run: docker compose push
